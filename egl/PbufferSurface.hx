@@ -1,18 +1,5 @@
 package egl;
 
-import Surface.RenderBufferValue;
-
-enum TextureFormatValue {
-	noTexture;
-	rgb;
-	rgba;
-}
-
-enum TextureTargetValue {
-	noTexture;
-	texture2D;
-}
-
 /**
 	EGL supports off-screen rendering surfaces in pbuffers.  Pbuffers differ
 	from windows in the following ways:
@@ -262,7 +249,7 @@ class PbufferSurface extends Surface {
 		object extension to OpenGL ES, and may eventually be deprecated.
 		Render to texture is not supported for OpenGL contexts.
 	**/
-	public function bindTexImage( dpy : Display, ?buffer : RenderBufferValue ) {
+	public function bindTexImage( dpy : Display, ?buffer : egl.types.RenderBuffer ) {
 		// TODO: STUB
 	}
 
@@ -294,7 +281,7 @@ class PbufferSurface extends Surface {
 		is thrown.  If [surface] is not a valid bound pbuffer surface, then an
 		[egl.errors.BadSurface] error is thrown.
 	**/
-	public function releaseTexImage( dpy : Display, ?buffer : RenderBufferValue ) {
+	public function releaseTexImage( dpy : Display, ?buffer : egl.types.RenderBuffer ) {
 		// TODO: STUB
 	}
 
@@ -303,7 +290,7 @@ class PbufferSurface extends Surface {
 		a pbuffer is bound to a texture map.  The default value of
 		[textureFormat] is [noTexture].
 	**/
-	public var textureFormat(default,never) : TextureFormatValue;
+	public var textureFormat(default,never) : egl.types.TextureFormat;
 
 	/**
 		Specifies the target for the OpenGL ES texture that will be created
@@ -311,7 +298,7 @@ class PbufferSurface extends Surface {
 		The target can be set to [noTexture] or [texture2D].  The default value
 		of [textureTarget] is [noTexture].
 	**/
-	public var textureTarget(default,never) : TextureTargetValue;
+	public var textureTarget(default,never) : egl.types.TextureTarget;
 
 	/**
 		Indicates whether storage for OpenGL ES mipmaps should be allocated.

@@ -1,6 +1,6 @@
 package egl;
 
-typedef NativeWindowType = Dynamic;
+import egl.types.Native;
 
 class WindowSurface extends Surface {
 
@@ -12,7 +12,7 @@ class WindowSurface extends Surface {
 		To create an on-screen rendering surface, first create a native
 		platform window with attributes corresponding to the desired [Config]
 		(e.g. with the same color depth, with other constraints specific to the
-		platform).  Using the platform-specific type [NativeWindowType], which
+		platform).  Using the platform-specific type [NativeWindow], which
 		is the type of a handle to that native window, then call
 		[createWindowSurface].
 
@@ -50,7 +50,7 @@ class WindowSurface extends Surface {
 		[egl.errors.BadAlloc] error is thrown.
 
 	**/
-	public function new( dpy : Display, config : Config, win : NativeWindowType, ?attribList : Dynamic ) {
+	public function new( dpy : Display, config : Config, win : NativeWindow, ?attribList : Dynamic ) {
 		// TODO: STUB
 	}
 

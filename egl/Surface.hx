@@ -1,53 +1,5 @@
 package egl;
 
-enum RenderBufferValue {
-	// TODO: add more documentation from section 2.2.2
-	/** Client APIs should render directly into the visible window.  **/
-	singleBuffer;
-	/** All client APIs should render into the back buffer.  **/
-	backBuffer;
-}
-
-enum ColorspaceValue {
-	/**
-		A non-linear, perceptually uniform color space is assumed, with a
-		corresponding [ImageFormat].
-	**/
-	sRGB;
-
-	/**
-		A linear color space is assumed, with a corresponding [ImageFormat].
-	**/
-	linear;
-}
-
-enum MultisampleResolutionBehavior {
-	/**
-		Chooses the default implementation-defined filtering method.
-	**/
-	resolveDefault;
-
-	/**
-		Chooses a one-pixel wide box filter placing equal weighting on all
-		multisample values.
-	**/
-	box;
-}
-
-enum SwapBehaviorValue {
-	/** Indicates that color buffer contents are unaffected. **/
-	preserved;
-	/** Indicates that color buffer contents may be destroyed or changed. **/
-	destroyed;
-}
-
-enum AlphaFormatValue {
-	/** Alpha values are not premultiplied.  **/
-	nonpre;
-	/** Alpha values are premultiplied.  **/
-	pre;
-}
-
 class Surface {
 
 	/**
@@ -99,9 +51,9 @@ class Surface {
 		[MULTISAMPLE_RESOLVE_BOX_BIT], an [egl.errors.BadMatch] error is
 		thrown.
 
-		The initial value of [multisampleResolve] is [resolveDefault].
+		The initial value of [multisampleResolve] is [defaultMethod].
 	**/
-	public var multisampleResolve(default,default) : MultisampleResolutionBehavior;
+	public var multisampleResolve(default,default) : egl.types.MultisampleBehavior;
 
 	/**
 		Specifies the effect on the color buffer of posting a surface with
@@ -114,7 +66,7 @@ class Surface {
 
 		The initial value of [swapBehavior] is chosen by the implementation.
 	**/
-	public var swapBehavior(default,default) : SwapBehaviorValue;
+	public var swapBehavior(default,default) : egl.types.SwapBehavior;
 
 	/**
 		Specifies which buffer should be used for client API rendering
@@ -123,13 +75,13 @@ class Surface {
 		[singleBuffer].  To determine the actual buffer being rendered
 		to by a context, query the context itself.
 	**/
-	public var renderBuffer(default,never) : RenderBufferValue;
+	public var renderBuffer(default,never) : egl.types.RenderBuffer;
 
 	/**
 		Specifies the color space used when rendering vector graphics to the
 		surface.  The default value of [vgColorspace] is [sRGB].
 	**/
-	public var vgColorspace(default,never) : ColorspaceValue;
+	public var vgColorspace(default,never) : egl.types.Colorspace;
 
 	/**
 		Specifies how alpha values are interpreted when rendering vector
@@ -144,5 +96,5 @@ class Surface {
 		systems to ignore the value of [vgAlphaFormat] when compositing window
 		surfaces.
 	**/
-	public var vgAlphaFormat(default,never) : AlphaFormatValue;
+	public var vgAlphaFormat(default,never) : egl.types.AlphaFormat;
 }

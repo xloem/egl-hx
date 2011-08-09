@@ -1,6 +1,6 @@
 package egl;
 
-typedef NativePixmapType = Dynamic;
+import egl.types.Native;
 
 /**
 
@@ -53,7 +53,7 @@ class PixmapSurface extends Surface {
 		cannot allocate resources for the new EGL pixmap, an
 		[egl.errors.BadAlloc] error is thrown.
 	**/
-	public function new( dpy : Display, config : Config, pixmap : NativePixmapType, ?attribList : Dynamic ) {
+	public function new( dpy : Display, config : Config, pixmap : NativePixmap, ?attribList : Dynamic ) {
 		// TODO: STUB
 	}
 }

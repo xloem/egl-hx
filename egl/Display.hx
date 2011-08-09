@@ -1,6 +1,6 @@
 package egl;
 
-typedef NativeDisplayType = Dynamic;
+import egl.types.Native;
 
 /**
   Represents the abstract display on which graphics are drawn.  In most
@@ -16,7 +16,7 @@ class Display {
 	/**** EGLSpec 3.2: Initialization ****/
 	/*************************************/
 	
-	public static inline var DEFAULT_DISPLAY : NativeDisplayType = null;
+	public static inline var DEFAULT_DISPLAY : NativeDisplay = null;
 	public static inline var NO_DISPLAY : Display = null;
 
 	/**
@@ -31,7 +31,7 @@ class Display {
 		If no display matching [displayID] is available, [NO_DISPLAY] is
 		returned.  No error is thrown in this case.
 	**/
-	public static function get( ?displayID : NativeDisplayType = DEFAULT_DISPLAY ) : Display {
+	public static function get( ?displayID : NativeDisplay = DEFAULT_DISPLAY ) : Display {
 		// TODO: STUB
 		return null;
 	}

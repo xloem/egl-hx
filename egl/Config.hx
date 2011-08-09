@@ -1,42 +1,6 @@
 package egl;
 
 /**
-	Values for the [colorBufferType] attribute of [Config] objects.
-**/
-enum ColorBufferType {
-
-	/** RGB color buffer **/
-	rgb;
-
-	/** luminance color buffer **/
-	luminance;
-}
-
-/**
-	An out-of-band attribute value indicating an attribute may have any value.
-**/
-enum DontCare {}
-
-/**
-	Values for the [transparentType] attribute of [Config] objects.
-**/
-enum TransparentType {
-
-	/**
-		Windows created with this [Config] will not have any transparent pixels.
-	**/
-	none;
-
-	/**
-		The [Config] supports transparency; a transparent pixel will be drawn
-		when the red, green and blue values which are read from the framebuffer
-		are equal to [transparentRedValue], [transparentGreenValue],
-		[transparentBlueValue], respectively.
-	**/
-	rgb;
-}
-
-/**
 	Describes the format, type and size of the color buffers and ancillary
 	buffers for a [Surface].  If the [Surface] is a window, then the [Config]
 	describing it may have an associated native visual type.
@@ -167,7 +131,7 @@ class Config {
 
 		Default: [rgb] Criteria: [Exact] Order: [Special] Priority: 2
 	**/
-	public var colorBufferType(default,null): ColorBufferType;
+	public var colorBufferType(default,null): egl.types.ColorBufferType;
 
 	/**
 		If true, then rendering to a surface with this configuration may run at
@@ -447,7 +411,7 @@ class Config {
 
 		Default: [none] Criteria: [Mask]
 	**/
-	public var transparentType(default,null): TransparentType;
+	public var transparentType(default,null): egl.types.TransparentType;
 
 	/**
 		transparent red value
