@@ -1,10 +1,10 @@
 package egl.errors;
 
 /**
-	An EGLDisplay argument does not name a valid EGLDisplay.
-	Any command taking an EGLDisplay parameter may generate this error.
+	A [Display] argument does not name a valid [Display].
+	Any command taking an [Display] parameter may generate this error.
  **/
 class BadDisplay extends Error {
 	public static inline var CODE = 0x3008;
-	public static inline var MEANING = "An EGLDisplay argument does not name a valid EGLDisplay.";
+	public static inline var MEANING = "A Display argument does not name a valid Display.";
 }
