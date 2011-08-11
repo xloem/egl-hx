@@ -6,6 +6,10 @@ package egl.errors;
 	error.
  **/
 class BadAttribute extends Error {
-	public static inline var CODE = 0x3004;
+	public static inline var CODE = EGL.BAD_ATTRIBUTE;
 	public static inline var MEANING = "An unrecognized attribute or attribute value was passed in an attribute list.";
+
+	override private inline function getCode() : Int { return CODE; }
+	override private inline function getMeaning() : String { return MEANING; }
+	public inline function new() {}
 }

@@ -5,6 +5,10 @@ package egl.errors;
 	Any command taking an [Display] parameter may generate this error.
  **/
 class BadDisplay extends Error {
-	public static inline var CODE = 0x3008;
+	public static inline var CODE = EGL.BAD_DISPLAY;
 	public static inline var MEANING = "A Display argument does not name a valid Display.";
+
+	override private inline function getCode() : Int { return CODE; }
+	override private inline function getMeaning() : String { return MEANING; }
+	public inline function new() {}
 }
