@@ -1,0 +1,232 @@
+All EGL commands and their implementation plans.
+
+Current general idea:
+Have a class with lots of static functions directly mimicing EGL.  Everything is an integer handle.
+Have other classes which use these static functions to make life object-oriented.
+
+/*** GLOBAL ***/
+
+//// #section.3.1 Errors
+
+// Retrieve the error code for the most recent EGL function in this thread.
+// ##: Convert errors to exceptions
+EGLint eglGetError();
+
+//// #section.3.10 Obtaining Extension Function Pointers
+
+// Return the address of an extension function
+// ##: Perhaps use generics?
+// ##: Includes both EGL and client API extensions
+__eglMustCastToProperFunctionPointerType eglGetProcAddress(const char *procname);
+
+//// #section.3.11 Releasing Thread State
+
+// Return EGL to its state at thread initialization
+EGLBoolean eglReleaseThread();
+
+/*** DISPLAYS **/
+
+//// #section.3.2 Initialization
+
+// Obtain a display
+// ##: Convert to constructor; use reference counting
+EGLDisplay eglGetDisplay(EGLNativeDisplayType display_id);
+
+// Initialize a display
+// ##: Merge into constructor; make major/minor into properties
+EGLBoolean eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor);
+
+// Uninitialize a display
+// ##: Use reference counting
+// ##: 'destroy' rather than 'terminate' would be consistent with the rest of EGL
+EGLBoolean eglTerminate(EGLDisplay dpy);
+
+//// #section.3.3 Versioning
+
+// Query a display
+// ##: Wrap CLIENT_APIS, EXTENSIONS, VENDOR, VERSION with properties
+// ##: Not needed on OO side as attributes are fixed
+const char * eglQueryString(EGLDisplay dpy, EGLint name);
+
+
+/*** CONFIGS ***/
+
+//// #subsection.3.4.1 Querying Configurations
+
+// Get configs a display supports
+EGLBoolean eglGetConfigs(EGLDisplay dpy, EGLConfig *configs,
+			 EGLint config_size, EGLint *num_config);
+
+// Get configs a display supports matching attrib_list
+EGLBoolean eglChooseConfig(EGLDisplay dpy, const EGLint *attrib_list,
+			   EGLConfig *configs, EGLint config_size,
+			   EGLint *num_config);
+
+//// #subsection.3.4.3 Querying Configuration Attributes
+
+// Query a config attribute
+// ##: Wrap known constants with properties
+// ##: Maintain this function and use constants, so users can use extensions
+EGLBoolean eglGetConfigAttrib(EGLDisplay dpy, EGLConfig config,
+			      EGLint attribute, EGLint *value);
+
+
+/*** SURFACES ***/
+
+//// #subsection.3.5.1 Creating On-Screen Rendering Surfaces
+
+// Create a window surface
+// ##: New class: WindowSurface ? OnScreenSurface ? DisplaySurface ?
+EGLSurface eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config,
+				  EGLNativeWindowType win,
+				  const EGLint *attrib_list);
+
+//// #subsection.3.5.2 Creating Off-Screen Rendering Surfaces
+
+// Create a pbuffer surface
+// ##: New class: PbufferSurface ? OffScreenSurface ? TextureSurface ?
+EGLSurface eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config,
+				   const EGLint *attrib_list);
+
+//// #subsection.3.5.3 Binding Off-Screen Rendering Surfaces To Client Buffers
+
+// Bind a client API renderable buffer to a pbuffer
+// ##: i.e. this makes an EGL renderable out of an image from an EGL context (openvg image)
+// ##: New class?: ClientSurface ? ImageSurface ? VGImageSurface ? OpenVGSurface ?
+EGLSurface eglCreatePbufferFromClientBuffer(
+	      EGLDisplay dpy, EGLenum buftype, EGLClientBuffer buffer,
+	      EGLConfig config, const EGLint *attrib_list);
+
+//// #subsection.3.5.4 Creating Native Pixmap Rendering Surfaces
+
+// Create a pixmap surface
+// ##: New class: PixmapSurface ? NativeSurface ? Specific for each platform ?
+// ##: I think for each of these 'specific' ones (openvg, pixmap), we should also expose the generic one with constants, somehow
+EGLSurface eglCreatePixmapSurface(EGLDisplay dpy, EGLConfig config,
+				  EGLNativePixmapType pixmap,
+				  const EGLint *attrib_list);
+
+//// #subsection.3.5.5 Destroying Rendering Surfaces
+
+// Destroy a surface
+// ##: 'terminate' with Display, 'destroy' with Surface ?
+EGLBoolean eglDestroySurface(EGLDisplay dpy, EGLSurface surface);
+
+//// #subsection.3.5.6 Surface Attributes
+
+// Set an attribute for a surface
+// ##: Wrap known constants with properties
+// ##: Maintain this function and use constants, so users can use extensions
+EGLBoolean eglSurfaceAttrib(EGLDisplay dpy, EGLSurface surface,
+			    EGLint attribute, EGLint value);
+
+// Query a surface attribute
+// ##: Wrap known constants with properties
+// ##: Maintain this function and use constants, so users can use extensions
+EGLBoolean eglQuerySurface(EGLDisplay dpy, EGLSurface surface,
+			   EGLint attribute, EGLint *value);
+
+//// #subsection.3.6.1 Binding a Surface to a OpenGL ES Texture
+
+// Define a two-dimensional texture image
+// ##: in EGL 1.4, the buffer parameter is unneccessary
+// ##: This is used only for OpenGL ES 1.x/2.x
+// ##: wrap in methods?
+EGLBoolean eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer);
+
+//// #subsection.3.6.2 Releasing a Surface from an OpenGL ES Texture
+
+// Release a color buffer that is being used as a texture
+// ##: in EGL 1.4, the buffer parameter is unneccessary
+// ##: This is used only for OpenGL ES 1.x/2.x
+// ##: wrap in methods?
+EGLBoolean eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer);
+
+//// #subsection.3.9.1 Posting to a Window
+
+// Post the color buffer to a window
+EGLBoolean eglSwapBuffers(EGLDisplay dpy, EGLSurface surface);
+
+//// #subsection.3.9.2 Copying to a Native Pixmap
+
+// Copy the color buffer to a native pixmap
+EGLBoolean eglCopyBuffers(EGLDisplay dpy, EGLSurface surface,
+			  EGLNativePixmapType target);
+
+
+/*** CONTEXTS ***/
+
+//// #section.3.7 Rendering Contexts
+
+// Set the current rendering API
+// ##: wrap in methods?
+EGLBoolean eglBindAPI(EGLenum api);
+
+// Obtain the value of the current rendering API
+// ##: wrap in methods?
+EGLenum eglQueryAPI();
+
+//// #subsection.3.7.1 Creating Rendering Contexts
+
+// Create a rendering context for the current rendering API
+// ##: Constructor
+// ##: Don't take the display param, infer it from config?
+// ##: In EGL 1.4, attrib_list is only used to select between OpenGL ES 1.x and 2.x
+EGLContext eglCreateContext(EGLDisplay dpy, EGLConfig config,
+			    EGLContext share_context,
+			    const EGLint *attrib_list);
+
+//// #subsection.3.7.2 Destroying Rendering Contexts
+
+// Destroy a rendering context
+// ##: don't need display param, hold it?
+EGLBoolean eglDestroyContext(EGLDisplay dpy, EGLContext ctx);
+
+//// #subsection.3.7.3 Binding Contexts and Drawables
+
+// Make a context current
+// ##: 'draw' and 'read' must be the same for OpenVG
+// ##: don't need display param?
+// ##: also used to release current context by passing EGL_NO_* values
+EGLBoolean eglMakeCurrent(EGLDisplay dpy, EGLSurface draw,
+			  EGLSurface read, EGLContext ctx);
+
+//// #subsection.3.7.4 Context Queries
+
+// Get the current context for the current rendering API
+EGLContext eglGetCurrentContext();
+
+// Get the surfaces used for rendering by a current context
+// ##: separate into read and draw surface properties of context?
+EGLSurface eglGetCurrentSurface(EGLint readdraw);
+
+// Get the display associated with a current context
+// ##: turn into property?
+EGLDisplay eglGetCurrentDisplay();
+
+// Obtain the value of context attributes
+// ##: Wrap known constants with properties
+// ##: Not needed on OO side as attributes are fixed
+EGLBoolean eglQueryContext(EGLDisplay dpy, EGLContext ctx,
+			   EGLint attribute, EGLint *value);
+
+//// #section.3.8 Synchronization Primitives
+
+// Hold upcoming native rendering calls until after client rendering calls complete.
+// ##: Applies to context
+EGLBoolean eglWaitClient();
+
+// Calls eglWaitClient for specifically the OpenGL ES API
+// ##: Duplicate function
+EGLBoolean eglWaitGL();
+
+// Hold upcoming client rendering calls until after native rendering calls complete.
+// ##: default to EGL_CORE_NATIVE_ENGINE?
+// ##: Applies to context
+EGLBoolean eglWaitNative(EGLint engine);
+
+//// #subsection.3.9.3 Posting Semantics
+
+// Specifies the minimum number of video frame periods per buffer swap
+// ##: Applies to context
+EGLBoolean eglSwapInterval(EGLDisplay dpy, EGLint interval);
