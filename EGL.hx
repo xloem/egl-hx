@@ -479,7 +479,10 @@ typedef NativePixmapType = EGLNativePixmapType;
 typedef NativeWindowType = EGLNativeWindowType;
 
 /** Allows the the use of EGLints by reference **/
-class EGLintPtr { public var value : EGLint; }
+class EGLintPtr {
+	public var value : EGLint;
+	public function new() {}
+}
 
 /** For attribute lists **/
 typedef EGLintArray = Array<EGLint>;
